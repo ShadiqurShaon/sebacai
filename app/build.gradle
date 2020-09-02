@@ -6,7 +6,7 @@ android {
 
     defaultConfig {
         applicationId "com.example.trucklagbe"
-        minSdkVersion 23
+        minSdkVersion 20
         targetSdkVersion 29
         versionCode 1
         versionName "1.0"
@@ -41,5 +41,9 @@ dependencies {
 
     // Intent Animation dependenciy
     implementation 'com.github.hajiyevelnur92:intentanimation:1.0'
+
+    implementation 'com.squareup.retrofit2:retrofit:2.3.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.3.0'
+    implementation 'com.jakewharton.picasso:picasso2-okhttp3-downloader:1.1.0'
 
 }
