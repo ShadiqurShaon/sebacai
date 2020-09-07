@@ -7,10 +7,25 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
+import android.widget.Toast;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class SpecificCategory extends AppCompatActivity {
 
@@ -18,7 +33,7 @@ public class SpecificCategory extends AppCompatActivity {
     private RecyclerView recyclerView;
     private SpesificCategoryAdapter adapter;
 
-
+    private ProfileDataType profileDataType;
     private Toolbar toolbar;
 
     @Override
@@ -30,6 +45,7 @@ public class SpecificCategory extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         String title = getIntent().getStringExtra("category");
+        int position = getIntent().getIntExtra("position",1)+1;
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(true);
@@ -41,39 +57,59 @@ public class SpecificCategory extends AppCompatActivity {
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(layoutManager);
 
-        list.add(new SpecificCategoryModel(R.drawable.doctor_a,"Dr. Habiba Ahmed Rika",
-                "Cardiology,Medicine", "MBBS,BCS,MD(Cardiology)",
-                "Assistan Professor","National Institiute of Cardiovascular Deseases",
-                "700"));
-        list.add(new SpecificCategoryModel(R.drawable.doctor_e,
-                "Dr. Kaji Md Rubayet Anower","Cardiology,Medicine",
-                ""+getString(R.string.dr_kaji_eduQulification),
-                "Cardiologist and Medicine Specialist ",
-                ""+getString(R.string.drKaji_institute),"600"));
-        list.add(new SpecificCategoryModel(R.drawable.doctor_c,
-                "Dr. Tarana Khanom Juthi","Cardiology, Endicronology",
-                ""+getString(R.string.drSadi_edu_qualification),
-                "Senior Medical Officer","National Heart Foundation Hospital",
-                "1000"));
-        list.add(new SpecificCategoryModel(R.drawable.doctor_a,"Dr. Habiba Ahmed Rika",
-                "Cardiology,Medicine", "MBBS,BCS,MD(Cardiology)",
-                "Assistan Professor","National Institiute of Cardiovascular Deseases",
-                "700"));
-        list.add(new SpecificCategoryModel(R.drawable.doctor_e,
-                "Dr. Kaji Md Rubayet Anower","Cardiology,Medicine",
-                ""+getString(R.string.dr_kaji_eduQulification),
-                "Cardiologist and Medicine Specialist ",
-                ""+getString(R.string.drKaji_institute),"600"));
-        list.add(new SpecificCategoryModel(R.drawable.doctor_c,
-                "Dr. Tarana Khanom Juthi","Cardiology, Endicronology",
-                ""+getString(R.string.drSadi_edu_qualification),
-                "Senior Medical Officer","National Heart Foundation Hospital",
-                "1000"));
+//        list.add(new SpecificCategoryModel(R.drawable.doctor_a,"Dr. Habiba Ahmed Rika",
+//                "Cardiology,Medicine", "MBBS,BCS,MD(Cardiology)",
+//                "Assistan Professor","National Institiute of Cardiovascular Deseases",
+//                "700"));
+        getAllDoctor(position);
 
 
-        adapter = new SpesificCategoryAdapter(list);
-        recyclerView.setAdapter(adapter);
-        adapter.notifyDataSetChanged();
+
+    }
+
+    private void getAllDoctor(int id)
+    {
+        Toast.makeText(SpecificCategory.this, "Id id "+id, Toast.LENGTH_SHORT).show();
+        Gson gson = new GsonBuilder().serializeNulls().create();
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(new ApiEnv().getLocaldoctor())
+                //.addConverterFactory(ScalarsConverterFactory.create())
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .build();
+        ApiRequest api = retrofit.create(ApiRequest.class);
+        Call<JsonObject> call = api.getalldoctor(ProfileDataType.getInstance().getToken(),id);
+        call.enqueue(new Callback<JsonObject>() {
+            @Override
+            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                if (!response.isSuccessful()) {
+                    Log.d("NOT SUCCESS", "onResponse: Code: " + response.code());
+                    return;
+                }
+                try {
+                    JSONObject jsonObject = new JSONObject(response.body().toString());
+
+                    for(int i=0;i<jsonObject.getJSONArray("all_doctor").length();i++){
+                        JSONObject doctor = jsonObject.getJSONArray("all_doctor").getJSONObject(i);
+                        list.add(new SpecificCategoryModel(R.drawable.doctor_a,doctor.getString("name"),
+                                doctor.getString("designation"),"MBBS,BCS,MD(Cardiology)",
+                                "Rangpur medicle collage",
+                                doctor.getString("location"),"500"));
+                    }
+                    Log.d("Doctor Details", "onResponse: Code: " + jsonObject);
+                    adapter = new SpesificCategoryAdapter(list);
+                    recyclerView.setAdapter(adapter);
+                    adapter.notifyDataSetChanged();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<JsonObject> call, Throwable t) {
+
+                Log.d("TAG", "CheckResponse: onFailure: " + t.getLocalizedMessage());
+            }
+        });
     }
 
     @Override

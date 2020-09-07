@@ -1,13 +1,22 @@
 package com.example.medicine;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.Menu;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.google.android.material.navigation.NavigationView;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -18,6 +27,15 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener{
 
@@ -27,6 +45,10 @@ public class MainActivity extends AppCompatActivity
     private static final int SETTINGS_FRAGMENT=3;
     private static final int HELP_FRAGMENT=4;
 
+    private ImageView profileimage;
+    private TextView name;
+    private TextView phone;
+
     private FrameLayout frameLayout;
     private NavigationView navigationView;
     public static DrawerLayout drawer;
@@ -34,12 +56,20 @@ public class MainActivity extends AppCompatActivity
     private Window window;
     private Toolbar toolbar;
 
+    private String token;
+    Context context;
+
     private int currentFragment = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        token = getIntent().getStringExtra("token");
+
+        setProfile(token);
+
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -47,7 +77,7 @@ public class MainActivity extends AppCompatActivity
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
 
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-
+        context = getApplicationContext();
 
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
@@ -62,6 +92,53 @@ public class MainActivity extends AppCompatActivity
         toggle.syncState();
         gotoFragment("Easy Health Care",new CategoryFragment(),CATEGORY_FRAGMENT);
 
+    }
+
+    private void setProfile(String token) {
+        Gson gson = new GsonBuilder().serializeNulls().create();
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(new ApiEnv().base_url())
+                //.addConverterFactory(ScalarsConverterFactory.create())
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .build();
+        ApiRequest api = retrofit.create(ApiRequest.class);
+        Call<JsonObject> call = api.getUserProfile(token);
+        call.enqueue(new Callback<JsonObject>() {
+            @Override
+            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                if (!response.isSuccessful()) {
+                    Log.d("TAG", "onResponse: Code: " + response.code());
+
+                    return;
+                }
+
+                try {
+                    JSONObject jsonObject = new JSONObject(response.body().toString());
+
+                    if (jsonObject != null) {
+                        profileimage =  (ImageView) findViewById(R.id.drawerPprofileID);
+                        name =  (TextView) findViewById(R.id.drawerNameID);
+                        phone =  (TextView) findViewById(R.id.drawerMobileID);
+                        name.setText(jsonObject.getJSONObject("patientdetails").getString("name").toString());
+                        phone.setText(jsonObject.getJSONObject("patientdetails").getString("phone").toString());
+                        Glide.with(context).load(jsonObject.getJSONObject("patientdetails").getString("profile_pic_url").toString()).into(profileimage);
+                        ProfileDataType.getInstance().setName(jsonObject.getJSONObject("patientdetails").getString("name").toString());
+                        ProfileDataType.getInstance().setPhone(jsonObject.getJSONObject("patientdetails").getString("phone").toString());
+                        ProfileDataType.getInstance().setProfile_pic(jsonObject.getJSONObject("patientdetails").getString("profile_pic_url").toString());
+
+
+                        Log.d("jsonobject", "onResponse: Code: "+jsonObject);
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<JsonObject> call, Throwable t) {
+
+            }
+        });
     }
 
     @Override

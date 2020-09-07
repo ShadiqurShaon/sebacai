@@ -47,6 +47,7 @@ public class DoctorsCategoryAdapter extends RecyclerView.Adapter<DoctorsCategory
 
         private ImageView image;
         private TextView title;
+        private int position;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -55,15 +56,17 @@ public class DoctorsCategoryAdapter extends RecyclerView.Adapter<DoctorsCategory
             title = itemView.findViewById(R.id.doctorsCategoryNameID);
         }
 
-        public void setData(int image, final String title, int position){
+        public void setData(int image, final String title, final int position){
             this.image.setImageResource(image);
             this.title.setText(title);
+            this.position = position;
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(itemView.getContext(),SpecificCategory.class);
                     intent.putExtra("category",title);
+                    intent.putExtra("position",position);
                     itemView.getContext().startActivity(intent);
                     customType(itemView.getContext(),"left-to-right");
                 }

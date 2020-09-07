@@ -10,6 +10,7 @@
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginTop="25dp"
         android:fillViewport="true">
 
         <LinearLayout
@@ -39,15 +40,15 @@
                 android:textColor="#707070"/>
 
             <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/doctorsCategoryRecylerID"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
                 android:layout_marginLeft="5dp"
+                android:layout_marginTop="8dp"
                 android:layout_marginRight="5dp"
-                tools:listitem="@layout/doctors_category_item_layout"
                 app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
                 app:spanCount="3"
-                android:id="@+id/doctorsCategoryRecylerID"/>
+                tools:listitem="@layout/doctors_category_item_layout" />
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>

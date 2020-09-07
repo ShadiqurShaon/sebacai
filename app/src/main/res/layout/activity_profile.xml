@@ -20,51 +20,77 @@
             android:layout_height="wrap_content"
             android:orientation="vertical" >
 
-            <LinearLayout
-                android:layout_width="80dp"
-                android:layout_height="80dp"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="60dp"
-                android:background="@drawable/ic_smartphone"></LinearLayout>
+
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:text="ভেরিফিকেশন"
+                android:layout_marginTop="120dp"
+                android:text="প্রোফাইল"
                 android:textSize="24sp"
                 android:textStyle="bold"
                 android:layout_gravity="center_horizontal"
                 android:textColor="@color/black"/>
 
-            <TextView
+
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/profile_image"
+                android:layout_gravity="center"
+                android:layout_margin="20dp"
+                android:layout_width="96dp"
+                android:layout_height="96dp"
+                android:src="@drawable/ic_profile"
+                app:civ_border_width="2dp"
+                app:civ_border_color="#979797"/>
+
+            <LinearLayout
+                android:layout_marginTop="8dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:textAlignment="center"
-                android:text="এসএমএস এর মাধ্যমে আপনি একটি\nOTP কোড পাবেন "
-                android:textSize="18sp"
-                android:layout_gravity="center_horizontal"
-                android:textColor="@color/black"/>
+                android:orientation="horizontal"
+                android:layout_marginBottom="20dp"
+                android:layout_gravity="center"
+                >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="প্রোফাইল ছবি আপলোড  করুন "
+                    android:textColor="#979797"/>
+
+            </LinearLayout>
 
             <EditText
-                android:id="@+id/varificationOTPID"
+                android:id="@+id/pro_name"
                 android:layout_width="match_parent"
                 android:layout_height="55dp"
                 android:background="@drawable/varification_otp_back"
                 android:layout_marginLeft="32dp"
                 android:layout_marginRight="32dp"
-                android:hint="OTP Code"
+                android:hint="নাম"
                 android:maxLength="5"
                 android:textAlignment="center"
-                android:inputType="numberPassword"
-                android:layout_marginTop="50dp"/>
+                android:inputType="text"
+                android:layout_marginTop="20dp"/>
 
-            <Button
-                android:id="@+id/varificationBtnID"
+            <EditText
+                android:id="@+id/pro_password"
                 android:layout_width="match_parent"
                 android:layout_height="55dp"
-                android:text="ভেরিফাই"
+                android:background="@drawable/varification_otp_back"
+                android:layout_marginLeft="32dp"
+                android:layout_marginRight="32dp"
+                android:hint="পাসওয়ার্ড"
+                android:textAlignment="center"
+                android:inputType="textPassword"
+                android:layout_marginTop="20dp"/>
+
+            <Button
+                android:id="@+id/profileUpdateBtn"
+                android:layout_width="match_parent"
+                android:layout_height="55dp"
+                android:text="পরবর্তী"
                 android:textStyle="normal"
                 android:textSize="16sp"
                 android:textColor="#979797"
@@ -74,29 +100,7 @@
                 android:layout_marginLeft="32dp"
                 android:layout_marginRight="32dp"/>
 
-            <LinearLayout
-                android:layout_marginTop="8dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginBottom="40dp"
-                android:layout_gravity="center"
-                >
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="ভেরিফিকেশন কোড সেন্ড হয় নি?"
-                    android:textColor="#979797"/>
-                <TextView
-                    android:layout_marginLeft="2dp"
-                    android:id="@+id/varificationCodeResendID"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="আবার চেষ্টা করুন"
-                    android:textColor="#4286F5"/>
-
-            </LinearLayout>
 
 
 

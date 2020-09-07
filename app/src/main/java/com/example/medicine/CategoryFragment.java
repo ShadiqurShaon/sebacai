@@ -30,21 +30,21 @@ public class CategoryFragment extends Fragment {
 
         recyclerView = (RecyclerView)view.findViewById(R.id.doctorsCategoryRecylerID);
 
-        list.add(new DoctorsCategoryModel(R.drawable.ic_test_pic,"Cardiology"));
-        list.add(new DoctorsCategoryModel(R.drawable.ic_test_pic,"Darmetology"));
-        list.add(new DoctorsCategoryModel(R.drawable.ic_test_pic,"ENT"));
-        list.add(new DoctorsCategoryModel(R.drawable.ic_test_pic,"Gastroentarology"));
-        list.add(new DoctorsCategoryModel(R.drawable.ic_test_pic,"General Practitioner"));
-        list.add(new DoctorsCategoryModel(R.drawable.ic_test_pic,"Neorology"));
-        list.add(new DoctorsCategoryModel(R.drawable.ic_test_pic,"Obstetrics & Gynecology"));
-        list.add(new DoctorsCategoryModel(R.drawable.ic_test_pic,"Oncology"));
-        list.add(new DoctorsCategoryModel(R.drawable.ic_test_pic,"Opthalmology"));
-        list.add(new DoctorsCategoryModel(R.drawable.ic_test_pic,"Orthopedics & Rheomatology"));
-        list.add(new DoctorsCategoryModel(R.drawable.ic_test_pic,"Pediatrics"));
-        list.add(new DoctorsCategoryModel(R.drawable.ic_test_pic,"Respiaratory Deseases"));
-        list.add(new DoctorsCategoryModel(R.drawable.ic_test_pic,"Dentist"));
-        list.add(new DoctorsCategoryModel(R.drawable.ic_test_pic,"Psychiatry"));
-        list.add(new DoctorsCategoryModel(R.drawable.ic_test_pic,"Medicine Specialist"));
+        list.add(new DoctorsCategoryModel(R.drawable.cardiovascular,"কার্ডিওলজিস্ট"));
+        list.add(new DoctorsCategoryModel(R.drawable.teeth,"ডেন্টিস্ট"));
+        list.add(new DoctorsCategoryModel(R.drawable.dermatologist,"ডার্মাটোলজিস্টট"));
+        list.add(new DoctorsCategoryModel(R.drawable.eye,"চক্ষু"));
+        list.add(new DoctorsCategoryModel(R.drawable.gastroenterology,"গ্যাস্ট্রোলজি"));
+        list.add(new DoctorsCategoryModel(R.drawable.medicine,"মেডিসিন"));
+        list.add(new DoctorsCategoryModel(R.drawable.surgeon,"সার্জারি"));
+        list.add(new DoctorsCategoryModel(R.drawable.pregnant,"স্ত্রীরোগ"));
+        list.add(new DoctorsCategoryModel(R.drawable.fracture,"অর্থোপেডিক"));
+        list.add(new DoctorsCategoryModel(R.drawable.skin,"ত্বক"));
+        list.add(new DoctorsCategoryModel(R.drawable.kidney,"ইউরোলজি"));
+        list.add(new DoctorsCategoryModel(R.drawable.ent,"নাক, কান,গলা"));
+        list.add(new DoctorsCategoryModel(R.drawable.newborn,"শিশু বিশেষজ্ঞ"));
+//        list.add(new DoctorsCategoryModel(R.drawable.ic_test_pic,"Psychiatry"));
+//        list.add(new DoctorsCategoryModel(R.drawable.ic_test_pic,"Medicine Specialist"));
 
         recyclerView.setLayoutManager(new GridLayoutManager(view.getContext(),3));
 

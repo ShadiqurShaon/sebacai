@@ -71,6 +71,13 @@ public class SpesificCategoryAdapter extends RecyclerView.Adapter<SpesificCatego
             this.institute.setText(institute);
             drDesignatioln.setText(designation);
             this.consultantFee.setText("Consultant Fee - "+consultantFee);
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+                }
+            });
         }
     }
 }

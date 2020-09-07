@@ -9,14 +9,29 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class Varification extends AppCompatActivity {
 
     private EditText otpCode;
     private Button otpButton;
+    private String token;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,10 +47,11 @@ public class Varification extends AppCompatActivity {
                 otpButton.setEnabled(false);
                 otpButton.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#CCD7DD")));
                 otpButton.setTextColor(ColorStateList.valueOf(Color.parseColor("#979797")));
-
-                Intent intent = new Intent(Varification.this,MainActivity.class);
-                startActivity(intent);
-                finish();
+                token = getIntent().getStringExtra("token");
+                getverifyOtp(otpCode.getText().toString(),token);
+//                Intent intent = new Intent(Varification.this,MainActivity.class);
+//                startActivity(intent);
+//                finish();
             }
         });
 
@@ -52,7 +68,7 @@ public class Varification extends AppCompatActivity {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (!TextUtils.isEmpty(otpCode.getText())){
-                    if (otpCode.getText().length() == 4){
+                    if (otpCode.getText().length() == 5){
                         otpButton.setEnabled(true);
                         otpButton.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#4286F5")));
                         otpButton.setTextColor(ColorStateList.valueOf(Color.parseColor("#ffffff")));
@@ -71,5 +87,54 @@ public class Varification extends AppCompatActivity {
 
             }
         });
+    }
+
+    private void getverifyOtp(String otp,String token) {
+
+        Gson gson = new GsonBuilder().serializeNulls().create();
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(new ApiEnv().base_url())
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .build();
+        ApiRequest api = retrofit.create(ApiRequest.class);
+        JsonObject otpjson = new JsonObject();
+        otpjson.addProperty("otp",otp);
+        Call<JsonObject> call = api.verifyOtp(token,otpjson);
+        call.enqueue(new Callback<JsonObject>() {
+            @Override
+            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                if (!response.isSuccessful()) {
+                    Log.d("TAG", "onResponse: Code: " + response.code());
+                    Log.d("TAG", "onResponse: Code: " + response.message());
+
+                    return;
+                }
+                Log.d("ok", "onResponse: Code: " + response.message());
+                try {
+                    JSONObject jsonObject = new JSONObject(response.body().toString());
+                    Log.d("ok", "onResponse: Code: " +jsonObject.toString());
+                    if (jsonObject != null) {
+                        String token2 = "Bearer " + jsonObject.getString("token");
+
+
+                        startActivity(new Intent(Varification.this, ProfileActivity.class)
+                                .putExtra("token", token2)
+                        );
+                        finish();
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+
+            @Override
+            public void onFailure(Call<JsonObject> call, Throwable t) {
+                Log.d("TAG", "CheckResponse: onFailure: " + t.getLocalizedMessage());
+            }
+        });
+
+
+
     }
 }
