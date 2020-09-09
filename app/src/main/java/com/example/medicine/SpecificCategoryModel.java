@@ -2,6 +2,7 @@ package com.example.medicine;
 
 public class SpecificCategoryModel {
     private int diImage;
+    private int doctorId;
     private String drName;
     private String drCategory;
     private String drEduQualification;
@@ -14,7 +15,7 @@ public class SpecificCategoryModel {
 
     public SpecificCategoryModel(int diImage, String drName, String drCategory,
                                  String drEduQualification, String designation,
-                                 String institute, String consultantFree) {
+                                 String institute, String consultantFree,int doctorId) {
         this.diImage = diImage;
         this.drName = drName;
         this.drCategory = drCategory;
@@ -22,6 +23,15 @@ public class SpecificCategoryModel {
         this.designation = designation;
         this.institute = institute;
         this.consultantFree = consultantFree;
+        this.doctorId = doctorId;
+    }
+
+    public int getDoctorId() {
+        return doctorId;
+    }
+
+    public void setDoctorId(int doctorId) {
+        this.doctorId = doctorId;
     }
 
     public int getDiImage() {

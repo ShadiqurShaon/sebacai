@@ -42,4 +42,9 @@ public interface ApiRequest {
     @Headers({"Content-Type: application/json"})
     @GET("getalldoctor/{id}")
     Call<JsonObject> getalldoctor(@Header("Authorization") String token,@Path("id") int id);
+
+
+    @Headers({"Content-Type: application/json"})
+    @GET("viewdoctor/{id}")
+    Call<JsonObject> doctordetails(@Path("id") int id);
 }

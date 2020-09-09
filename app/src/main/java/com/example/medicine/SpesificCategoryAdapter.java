@@ -1,5 +1,6 @@
 package com.example.medicine;
 
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +11,8 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
+
+import static maes.tech.intentanim.CustomIntent.customType;
 
 public class SpesificCategoryAdapter extends RecyclerView.Adapter<SpesificCategoryAdapter.ViewHolder> {
 
@@ -36,8 +39,9 @@ public class SpesificCategoryAdapter extends RecyclerView.Adapter<SpesificCatego
         String designation = list.get(position).getDesignation();
         String institute = list.get(position).getInstitute();
         String consultantFee = list.get(position).getConsultantFree();
+        int doctorID = list.get(position).getDoctorId();
 
-        holder.setData(image,name,category,eduQualification,designation,institute,consultantFee);
+        holder.setData(image,name,category,eduQualification,designation,institute,consultantFee,doctorID);
     }
 
     @Override
@@ -63,7 +67,7 @@ public class SpesificCategoryAdapter extends RecyclerView.Adapter<SpesificCatego
         }
 
         public void setData(int image, String name, String category,
-                            String eduQualification, String designation, String institute, String consultantFee ){
+                            String eduQualification, String designation, String institute, String consultantFee, final int doctorID ){
             drImage.setImageResource(image);
             drName.setText(name);
             drCategory.setText(category);
@@ -75,7 +79,10 @@ public class SpesificCategoryAdapter extends RecyclerView.Adapter<SpesificCatego
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-
+                    Intent intent = new Intent(itemView.getContext(),DoctorDetailsActivity.class);
+                    intent.putExtra("doctorID",doctorID);
+                    itemView.getContext().startActivity(intent);
+                    customType(itemView.getContext(),"left-to-right");
                 }
             });
         }

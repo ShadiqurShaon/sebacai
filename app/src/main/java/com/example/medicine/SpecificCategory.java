@@ -69,7 +69,7 @@ public class SpecificCategory extends AppCompatActivity {
 
     private void getAllDoctor(int id)
     {
-        Toast.makeText(SpecificCategory.this, "Id id "+id, Toast.LENGTH_SHORT).show();
+//        Toast.makeText(SpecificCategory.this, "Id id "+id, Toast.LENGTH_SHORT).show();
         Gson gson = new GsonBuilder().serializeNulls().create();
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(new ApiEnv().getLocaldoctor())
@@ -82,7 +82,7 @@ public class SpecificCategory extends AppCompatActivity {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
                 if (!response.isSuccessful()) {
-                    Log.d("NOT SUCCESS", "onResponse: Code: " + response.code());
+                    Log.d("Spessic category", "onResponse: Code: " + response.code());
                     return;
                 }
                 try {
@@ -93,7 +93,7 @@ public class SpecificCategory extends AppCompatActivity {
                         list.add(new SpecificCategoryModel(R.drawable.doctor_a,doctor.getString("name"),
                                 doctor.getString("designation"),"MBBS,BCS,MD(Cardiology)",
                                 "Rangpur medicle collage",
-                                doctor.getString("location"),"500"));
+                                doctor.getString("location"),"500",doctor.getInt("id")));
                     }
                     Log.d("Doctor Details", "onResponse: Code: " + jsonObject);
                     adapter = new SpesificCategoryAdapter(list);

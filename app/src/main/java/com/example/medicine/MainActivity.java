@@ -95,6 +95,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void setProfile(String token) {
+        Log.d("main activity", "set profile"+token);
         Gson gson = new GsonBuilder().serializeNulls().create();
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(new ApiEnv().base_url())
