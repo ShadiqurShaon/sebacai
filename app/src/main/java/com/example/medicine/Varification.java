@@ -2,6 +2,7 @@ package com.example.medicine;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
@@ -32,6 +33,7 @@ public class Varification extends AppCompatActivity {
     private EditText otpCode;
     private Button otpButton;
     private String token;
+    private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,6 +93,10 @@ public class Varification extends AppCompatActivity {
 
     private void getverifyOtp(String otp,String token) {
 
+        progressDialog = new ProgressDialog(Varification.this);
+        progressDialog.show();
+        progressDialog.setContentView(R.layout.progress_dialog);
+        progressDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
         Gson gson = new GsonBuilder().serializeNulls().create();
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(new ApiEnv().base_url())
@@ -115,7 +121,7 @@ public class Varification extends AppCompatActivity {
                     Log.d("ok", "onResponse: Code: " +jsonObject.toString());
                     if (jsonObject != null) {
                         String token2 = "Bearer " + jsonObject.getString("token");
-
+                        progressDialog.dismiss();
 
                         startActivity(new Intent(Varification.this, ProfileActivity.class)
                                 .putExtra("token", token2)

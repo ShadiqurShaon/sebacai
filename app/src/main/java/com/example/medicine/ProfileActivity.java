@@ -56,6 +56,7 @@ public class ProfileActivity extends AppCompatActivity {
     private ImageView imageview;
     private Uri mImageUri;
     String image_url;
+    private ProgressDialog progressDialog;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -77,6 +78,11 @@ public class ProfileActivity extends AppCompatActivity {
         profileUpdateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                progressDialog = new ProgressDialog(ProfileActivity.this);
+                progressDialog.show();
+                progressDialog.setContentView(R.layout.progress_dialog);
+                progressDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+
                 Gson gson = new GsonBuilder().serializeNulls().create();
 //                ProfileDataType profile = new ProfileDataType(name.getText().toString(),image_url,password.getText().toString());
 
@@ -108,6 +114,7 @@ public class ProfileActivity extends AppCompatActivity {
                         SharedPreferences.Editor editor = sharedPref.edit();
                         editor.putString("token",token);
                         editor.commit();
+                        progressDialog.dismiss();
                         startActivity(new Intent(ProfileActivity.this, MainActivity.class)
                                 .putExtra("token", token)
                         );

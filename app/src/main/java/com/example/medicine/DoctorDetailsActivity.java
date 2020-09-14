@@ -3,12 +3,18 @@ package com.example.medicine;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.FragmentTransaction;
+import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,19 +29,22 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class DoctorDetailsActivity extends AppCompatActivity {
+public class DoctorDetailsActivity extends AppCompatActivity implements BookAppointmentFragment.BookappointmentListener {
     private Toolbar toolbar;
     private RecyclerView recyclerView;
+    private Button appointment_button,btnSubmit;
     private DoctorScheduleAdapter adapter;
+    int doctorID;
     private TextView doctor_name,doctor_category,doctor_education,doctor_designation,doctor_institute,doctor_fees;
     List<DoctorScheduleModel>list = new ArrayList<>();
+    private ProgressDialog progressDialog;
+    ArrayList<String> dayname = new ArrayList<String>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,8 +62,18 @@ public class DoctorDetailsActivity extends AppCompatActivity {
         doctor_designation = findViewById(R.id.doctorsDetailsDesignationID);
         doctor_institute = findViewById(R.id.doctorsDetailsInstituteID);
         doctor_fees = findViewById(R.id.doctorsDetailsFeeID);
+        appointment_button = findViewById(R.id.appointmentinBtnID);
+        appointment_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
 
-        int doctorID = getIntent().getIntExtra("doctorID",1);
+                opendialog();
+            }
+        });
+
+
+        doctorID = getIntent().getIntExtra("doctorID",1);
+
         setdoctorDetailsData(doctorID);
 //        Toast.makeText(DoctorDetailsActivity.this, "Id id "+position, Toast.LENGTH_SHORT).show();
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -62,8 +81,24 @@ public class DoctorDetailsActivity extends AppCompatActivity {
         getSupportActionBar().setTitle("Doctor Category");
     }
 
-    public void setdoctorDetailsData(int doctorId){
+    private void opendialog() {
 
+        startActivity(new Intent(DoctorDetailsActivity.this, BookSerialActivity.class)
+                .putExtra("doctor_id",doctorID)
+                .putStringArrayListExtra("days",dayname)
+
+        );
+
+//        BookAppointmentFragment dialog = new BookAppointmentFragment();
+//        dialog.show(getSupportFragmentManager(),"Book Appointment");
+
+    }
+
+    public void setdoctorDetailsData(int doctorId){
+        progressDialog = new ProgressDialog(DoctorDetailsActivity.this);
+        progressDialog.show();
+        progressDialog.setContentView(R.layout.progress_dialog);
+        progressDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
         Gson gson = new GsonBuilder().serializeNulls().create();
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(new ApiEnv().getLocaldoctor())
@@ -96,11 +131,13 @@ public class DoctorDetailsActivity extends AppCompatActivity {
                     for(int i=0;i<schedule.length();i++){
                         JSONObject schedule1 = schedule.getJSONObject(i);
                         list.add(new DoctorScheduleModel(schedule1.getString("schedule_day"),schedule1.getString("start_time")+"থেকে"+schedule1.getString("end_time")));
+                        dayname.add(schedule1.getString("schedule_day")+"  "+schedule1.getString("start_time")+"-"+schedule1.getString("end_time"));
                     }
 
                     adapter = new DoctorScheduleAdapter(list);
                     recyclerView.setAdapter(adapter);
                     adapter.notifyDataSetChanged();
+                    progressDialog.dismiss();
 
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -112,6 +149,15 @@ public class DoctorDetailsActivity extends AppCompatActivity {
 
             }
         });
+
+    }
+
+    private void setFragment(Fragment fragment)
+    {
+            androidx.fragment.app.FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            transaction.replace(R.id.appoint_fragment_layout,fragment);
+            transaction.setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
+            transaction.commit();
 
     }
 
@@ -128,5 +174,11 @@ public class DoctorDetailsActivity extends AppCompatActivity {
     public void onBackPressed() {
         this.finish();
         super.onBackPressed();
+    }
+
+    @Override
+    public void setPatientData(String p_name, String p_age, String appo_day, String short_dis) {
+        Toast.makeText(this, "patient Name is"+p_name, Toast.LENGTH_LONG).show();
+
     }
 }

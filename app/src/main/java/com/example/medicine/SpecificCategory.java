@@ -6,6 +6,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
@@ -35,6 +36,7 @@ public class SpecificCategory extends AppCompatActivity {
 
     private ProfileDataType profileDataType;
     private Toolbar toolbar;
+    private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,6 +71,11 @@ public class SpecificCategory extends AppCompatActivity {
 
     private void getAllDoctor(int id)
     {
+        progressDialog = new ProgressDialog(SpecificCategory.this);
+        progressDialog.show();
+        progressDialog.setContentView(R.layout.progress_dialog);
+        progressDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+
 //        Toast.makeText(SpecificCategory.this, "Id id "+id, Toast.LENGTH_SHORT).show();
         Gson gson = new GsonBuilder().serializeNulls().create();
         Retrofit retrofit = new Retrofit.Builder()
@@ -99,6 +106,7 @@ public class SpecificCategory extends AppCompatActivity {
                     adapter = new SpesificCategoryAdapter(list);
                     recyclerView.setAdapter(adapter);
                     adapter.notifyDataSetChanged();
+                    progressDialog.dismiss();
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }

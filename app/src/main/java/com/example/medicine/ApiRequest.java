@@ -47,4 +47,8 @@ public interface ApiRequest {
     @Headers({"Content-Type: application/json"})
     @GET("viewdoctor/{id}")
     Call<JsonObject> doctordetails(@Path("id") int id);
+
+    @Headers({"Content-Type: application/json"})
+    @POST("patientAppointment")
+    Call<JsonObject> placeAppointment(@Header("Authorization") String token,@Body JsonObject pro);
 }

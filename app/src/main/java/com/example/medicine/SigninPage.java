@@ -3,6 +3,7 @@ package com.example.medicine;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -18,6 +19,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -36,6 +38,7 @@ public class SigninPage extends AppCompatActivity {
 
     private Button signinBtn;
     private EditText mobileNumber;
+    private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,6 +106,11 @@ public class SigninPage extends AppCompatActivity {
 
     private void signUpWithOtp(EditText phoneNumber) throws JSONException {
 
+        progressDialog = new ProgressDialog(SigninPage.this);
+        progressDialog.show();
+        progressDialog.setContentView(R.layout.progress_dialog);
+        progressDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+
         Register_datatype phone = new Register_datatype(phoneNumber.getText().toString(),null,null);
         Log.d("TAG", "phone: Code: " + phone.getPhone());
         Gson gson = new GsonBuilder().serializeNulls().create();
@@ -119,12 +127,12 @@ public class SigninPage extends AppCompatActivity {
                     Log.d("TAG", "onResponse: Code: " + response.code());
                     return;
                 }
-
+                progressDialog.dismiss();
                  Log.d("TAG", "onResponse: ResponseCode: " + response.code());
                     Register_datatype res_data = response.body();
                     Intent intent = new Intent(SigninPage.this,Varification.class)
                     .putExtra("token", "Bearer "+res_data.getToken());
-                     startActivity(intent);
+                    startActivity(intent);
                     finish();
             }
 
