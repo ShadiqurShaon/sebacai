@@ -34,9 +34,9 @@
     <string name="discount_title">ডিসকাউন্ট</string>
     <string name="trip_history_title">ট্রিপ হিস্টরি</string>
 
-    <string name="menu_home">চলতি ট্রিপ</string>
-    <string name="menu_trip_history">ট্রিপ হিস্টরি</string>
-    <string name="menu_discount">ডিসকাউন্ট</string>
+    <string name="menu_home">ডাক্তার নির্বাচন</string>
+    <string name="menu_trip_history">আপনার অ্যাপয়েন্টমেন্ট</string>
+    <string name="menu_discount">পরামর্শ</string>
     <string name="menu_settings">সেটিংস</string>
     <string name="menu_help">সাহায্য</string>
     <!-- TODO: Remove or change this placeholder text -->

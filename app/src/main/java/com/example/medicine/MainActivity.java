@@ -2,10 +2,12 @@ package com.example.medicine;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.Menu;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
@@ -66,9 +68,9 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        token = getIntent().getStringExtra("token");
 
-        setProfile(token);
+
+
 
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -83,6 +85,11 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
         navigationView.getMenu().getItem(0).setChecked(true);
 
+        View header_view = navigationView.getHeaderView(0);
+        profileimage = header_view.findViewById(R.id.drawerPprofileID);
+        name = header_view.findViewById(R.id.drawerNameID);
+        phone = header_view.findViewById(R.id.drawerMobileID);
+
         frameLayout=(FrameLayout)findViewById(R.id.mainFrameLayoutID);
 
 
@@ -90,12 +97,41 @@ public class MainActivity extends AppCompatActivity
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
-        gotoFragment("Easy Health Care",new CategoryFragment(),CATEGORY_FRAGMENT);
+
+        if(token!=null){
+            setProfile(token);
+
+        }else{
+//            SharedPreferences sp = getSharedPreferences("user_token", Context.MODE_PRIVATE);
+//            token = sp.getString("token",null);
+//            setProfile(token);
+            SharedPreferences sp = getSharedPreferences("user", Context.MODE_PRIVATE);
+            String name_pro = sp.getString("name","name");
+            String phone_pro = sp.getString("phone","phone");
+            String image_pro = sp.getString("image","null");
+
+            Log.d("main activity", "set profile"+name_pro+" "+phone_pro+" "+image_pro);
+            profileData(name_pro,phone_pro,image_pro);
+        }
+        gotoFragment("বিভাগ",new CategoryFragment(),CATEGORY_FRAGMENT);
 
     }
 
+//    @Override
+//    protected void onStart() {
+//        super.onStart();
+//        SharedPreferences sp = getSharedPreferences("user", Context.MODE_PRIVATE);
+//        String name = sp.getString("name","name");
+//        String phone = sp.getString("phone","phone");
+//        String image = sp.getString("image","null");
+//        Log.d("On start main", "name "+name+" phone "+phone+"image ");
+//
+//
+//    }
+
     private void setProfile(String token) {
         Log.d("main activity", "set profile"+token);
+
         Gson gson = new GsonBuilder().serializeNulls().create();
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(new ApiEnv().base_url())
@@ -117,17 +153,23 @@ public class MainActivity extends AppCompatActivity
                     JSONObject jsonObject = new JSONObject(response.body().toString());
 
                     if (jsonObject != null) {
-                        profileimage =  (ImageView) findViewById(R.id.drawerPprofileID);
-                        name =  (TextView) findViewById(R.id.drawerNameID);
-                        phone =  (TextView) findViewById(R.id.drawerMobileID);
-                        name.setText(jsonObject.getJSONObject("patientdetails").getString("name").toString());
-                        phone.setText(jsonObject.getJSONObject("patientdetails").getString("phone").toString());
-                        Glide.with(context).load(jsonObject.getJSONObject("patientdetails").getString("profile_pic_url").toString()).into(profileimage);
-                        ProfileDataType.getInstance().setName(jsonObject.getJSONObject("patientdetails").getString("name").toString());
-                        ProfileDataType.getInstance().setPhone(jsonObject.getJSONObject("patientdetails").getString("phone").toString());
-                        ProfileDataType.getInstance().setProfile_pic(jsonObject.getJSONObject("patientdetails").getString("profile_pic_url").toString());
 
+                        String name_pat = jsonObject.getJSONObject("patientdetails").getString("name").toString();
+                        String phone_pat =jsonObject.getJSONObject("patientdetails").getString("phone").toString();
+                        String img_pat  = jsonObject.getJSONObject("patientdetails").getString("profile_pic_url").toString();
+                        profileData(name_pat,phone_pat,img_pat);
+//
+//                        ProfileDataType.getInstance().setName(jsonObject.getJSONObject("patientdetails").getString("name").toString());
+//                        ProfileDataType.getInstance().setPhone(jsonObject.getJSONObject("patientdetails").getString("phone").toString());
+//                        ProfileDataType.getInstance().setProfile_pic(jsonObject.getJSONObject("patientdetails").getString("profile_pic_url").toString());
 
+                        SharedPreferences sharedPref = getSharedPreferences(
+                                "user", Context.MODE_PRIVATE);
+                        SharedPreferences.Editor editor = sharedPref.edit();
+                        editor.putString("name",jsonObject.getJSONObject("patientdetails").getString("name").toString());
+                        editor.putString("phone",jsonObject.getJSONObject("patientdetails").getString("phone").toString());
+                        editor.putString("image",jsonObject.getJSONObject("patientdetails").getString("profile_pic_url").toString());
+                        editor.commit();
                         Log.d("jsonobject", "onResponse: Code: "+jsonObject);
                     }
                 } catch (JSONException e) {
@@ -142,13 +184,23 @@ public class MainActivity extends AppCompatActivity
         });
     }
 
+    public void profileData(String name2,String phone2,String image){
+        Log.d("profile", "profile seted");
+//        profileimage =  (ImageView) findViewById(R.id.drawerPprofileID);
+//        name =  (TextView) findViewById(R.id.drawerNameID);
+//        phone =  (TextView) findViewById(R.id.drawerMobileID);
+        name.setText(name2);
+        phone.setText(phone2);
+        Glide.with(context).load(image).into(profileimage);
+    }
+
     @Override
     public void onBackPressed() {
         if (currentFragment == CATEGORY_FRAGMENT){
             currentFragment = -1;
             super.onBackPressed();
         }else {
-            gotoFragment("Easy Health Care", new CategoryFragment(),CATEGORY_FRAGMENT);
+            gotoFragment("বিভাগ", new CategoryFragment(),CATEGORY_FRAGMENT);
             navigationView.getMenu().getItem(0).setChecked(true);
         }
     }
@@ -173,11 +225,11 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_home){
-            gotoFragment("Easy Health Care",new CategoryFragment(),CATEGORY_FRAGMENT);
+            gotoFragment("বিভাগ",new CategoryFragment(),CATEGORY_FRAGMENT);
         }else if (id == R.id.nav_trip_hostory){
-            gotoFragment(getString(R.string.trip_history_title),new TripHistoryFragment(),TRIP_HISTORY_FRAGMENT);
+            gotoFragment("আপনার অ্যাপয়েন্টমেন্ট",new TripHistoryFragment(),TRIP_HISTORY_FRAGMENT);
         }else if (id == R.id.nav_discount){
-            gotoFragment(getString(R.string.discount_title),new DiscountFragment(),DISCOUNT_FRAGMENT);
+            gotoFragment("পরামর্শ",new DiscountFragment(),DISCOUNT_FRAGMENT);
         }else if (id == R.id.nav_setting){
             gotoFragment(getString(R.string.settings_title),new SettingsFragment(),SETTINGS_FRAGMENT);
         }else if (id == R.id.nav_help){
