@@ -117,6 +117,12 @@ public class ProfileActivity extends AppCompatActivity {
 
                             if (jsonObject != null) {
 
+                                SharedPreferences sharedPref1 = getSharedPreferences(
+                                "user_token", Context.MODE_PRIVATE);
+                        SharedPreferences.Editor editor1 = sharedPref1.edit();
+                        editor1.putString("token",token);
+                        editor1.commit();
+
                                 String user_name = jsonObject.getJSONObject("user").getString("name").toString();
                                 String user_phone =jsonObject.getJSONObject("user").getString("phone").toString();
                                 String user_propic  = jsonObject.getJSONObject("user").getString("profile_pic_url").toString();

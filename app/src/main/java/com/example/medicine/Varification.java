@@ -120,6 +120,7 @@ public class Varification extends AppCompatActivity {
                     Log.d("Token", "onResponse: Code: " +jsonObject.toString());
                     if (jsonObject != null) {
                         String token2 = "Bearer " + jsonObject.getString("token");
+
                         progressDialog.dismiss();
 
                         startActivity(new Intent(Varification.this, ProfileActivity.class)

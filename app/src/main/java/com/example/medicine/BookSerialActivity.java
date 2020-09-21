@@ -127,8 +127,7 @@ public class BookSerialActivity extends AppCompatActivity implements AdapterView
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
                 if (!response.isSuccessful()) {
-                    Log.d("TAG", "onResponse: Code: " + response.message());
-
+                    Log.d("not success", "onResponse: Code: " + response.code());
                     return;
                 }
 

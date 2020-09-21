@@ -14,7 +14,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".HistoryActivity"></activity>
-        <activity android:name=".BookSerialActivity" />
+        <activity android:name=".BookSerialActivity"
+            android:windowSoftInputMode="stateHidden|adjustResize"/>
         <activity android:name=".DoctorDetailsActivity" />
         <activity android:name=".ProfileActivity" />
         <activity android:name=".SpecificCategory" />
@@ -24,7 +25,8 @@
             android:label="@string/title_activity_main"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".SplashScreen" />
-        <activity android:name=".SigninPage">
+        <activity android:name=".SigninPage"
+            android:windowSoftInputMode="stateHidden|adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
