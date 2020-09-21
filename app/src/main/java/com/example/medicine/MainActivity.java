@@ -98,21 +98,11 @@ public class MainActivity extends AppCompatActivity
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
-        if(token!=null){
-            setProfile(token);
-
-        }else{
-//            SharedPreferences sp = getSharedPreferences("user_token", Context.MODE_PRIVATE);
-//            token = sp.getString("token",null);
-//            setProfile(token);
-            SharedPreferences sp = getSharedPreferences("user", Context.MODE_PRIVATE);
-            String name_pro = sp.getString("name","name");
-            String phone_pro = sp.getString("phone","phone");
-            String image_pro = sp.getString("image","null");
-
-            Log.d("main activity", "set profile"+name_pro+" "+phone_pro+" "+image_pro);
-            profileData(name_pro,phone_pro,image_pro);
-        }
+        SharedPreferences sp = getSharedPreferences("user", Context.MODE_PRIVATE);
+        String name_pro = sp.getString("name","name");
+        String phone_pro = sp.getString("phone","phone");
+        String image_pro = sp.getString("image","null");
+        profileData(name_pro,phone_pro,image_pro);
         gotoFragment("বিভাগ",new CategoryFragment(),CATEGORY_FRAGMENT);
 
     }
@@ -227,7 +217,9 @@ public class MainActivity extends AppCompatActivity
         if (id == R.id.nav_home){
             gotoFragment("বিভাগ",new CategoryFragment(),CATEGORY_FRAGMENT);
         }else if (id == R.id.nav_trip_hostory){
-            gotoFragment("আপনার অ্যাপয়েন্টমেন্ট",new TripHistoryFragment(),TRIP_HISTORY_FRAGMENT);
+//            gotoFragment("আপনার অ্যাপয়েন্টমেন্ট",new TripHistoryFragment(),TRIP_HISTORY_FRAGMENT);
+            startActivity(new Intent(MainActivity.this,HistoryActivity.class));
+            finish();
         }else if (id == R.id.nav_discount){
             gotoFragment("পরামর্শ",new DiscountFragment(),DISCOUNT_FRAGMENT);
         }else if (id == R.id.nav_setting){

@@ -23,6 +23,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
@@ -57,6 +58,7 @@ public class ProfileActivity extends AppCompatActivity {
     private Uri mImageUri;
     String image_url;
     private ProgressDialog progressDialog;
+    Context context;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -65,7 +67,7 @@ public class ProfileActivity extends AppCompatActivity {
         name = findViewById(R.id.pro_name);
         password = findViewById(R.id.pro_password);
         profileUpdateButton = (Button)findViewById(R.id.profileUpdateBtn);
-
+        context = getApplicationContext();
         imageview = findViewById(R.id.profile_image);
         imageview.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -108,17 +110,47 @@ public class ProfileActivity extends AppCompatActivity {
                             Log.d("TAG", "onResponse: Code: " + response.code());
                             return;
                         }
-                        ProfileDataType.getInstance().setToken(token);
-                        SharedPreferences sharedPref = getSharedPreferences(
-                                "user_token", Context.MODE_PRIVATE);
-                        SharedPreferences.Editor editor = sharedPref.edit();
-                        editor.putString("token",token);
-                        editor.commit();
-                        progressDialog.dismiss();
+
+
+                        try {
+                            JSONObject jsonObject = new JSONObject(response.body().toString());
+
+                            if (jsonObject != null) {
+
+                                String user_name = jsonObject.getJSONObject("user").getString("name").toString();
+                                String user_phone =jsonObject.getJSONObject("user").getString("phone").toString();
+                                String user_propic  = jsonObject.getJSONObject("user").getString("profile_pic_url").toString();
+
+                                SharedPreferences sharedPref = getSharedPreferences(
+                                        "user", Context.MODE_PRIVATE);
+                                SharedPreferences.Editor editor = sharedPref.edit();
+                                editor.putString("name",user_name);
+                                editor.putString("phone",user_phone);
+                                editor.putString("image",user_propic);
+                                editor.commit();
+                                progressDialog.dismiss();
                         startActivity(new Intent(ProfileActivity.this, MainActivity.class)
-                                .putExtra("token", token)
                         );
                         finish();
+
+                            }
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+
+//                        SharedPreferences sharedPref = getSharedPreferences(
+//                                "user_token", Context.MODE_PRIVATE);
+//                        SharedPreferences.Editor editor = sharedPref.edit();
+//                        editor.putString("token",token);
+//                        editor.putString("name",name.getText().toString());
+//                        editor.commit();
+//                        progressDialog.dismiss();
+//                        startActivity(new Intent(ProfileActivity.this, MainActivity.class)
+//                                .putExtra("token", token)
+//                        );
+//                        finish();
 
                     }
 
@@ -213,14 +245,13 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     private void uploadImage() throws URISyntaxException {
-//        final ProgressDialog pd = new ProgressDialog(this);
-//        pd.setMessage("Uploading");
-//        pd.show();
-//        token = "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiIxIiwianRpIjoiMDcxZmU5ZDI2NzgyYTY0NzIzNzY3Y2RlZTJmMzQ4OGY5ODhjZjU5MzM3MmQ2MmIwYTdjZWYwMmRiNDAzYTExMTM5YTQ5MjBhMzRlYTM1ODUiLCJpYXQiOjE1OTkyMDA0OTMsIm5iZiI6MTU5OTIwMDQ5MywiZXhwIjoxNjMwNzM2NDkzLCJzdWIiOiIxIiwic2NvcGVzIjpbXX0.eC27ga3AbdX6Lsx-ei9gfLV3z600gJFbbNmvHIk9nw34aDrgZRmZr-9TphoTl1RW1kEu0nXAo0Yc3b48rER8nxBbFQQA3s4mbeIjDiWJ04N1kftpb5XDcxEkXdzRFnhv8eCZETsupdzQnVGX0E1YJwq_Ak2xCuo41BmCXnTnhGCGc9YY6paUPZ91EQAxWkWGhWz1_2LwlRN4IlmYUxmKlmJ_AeHuFPiC_UYyWG7gyHLxk5FfpwKAYP3zW5V0tYScuvkJ1d_fyLeN6wlkkin4cgUOvGDSnsJMqrafGNuNDTVQwLMaE4xgy3gdPt3GE08v1vPltxfOi6pmVwxmJMsMV0mvu9DfdUbcIeuVTPz1plAGfsDxsO412z15VFir4iJ43eWKA_WI5Bxfro-oWnPBzQ-oqXeND9H7AsMxsynk0QjYWSQUvC-vnQAjw_q1Eki47Tet8ecn-TKI5ug8MNeY85M-O20lcIeGLvaocTBlJIflKTxVSuACTAU2Qw9dh1r8ZH2HyNcEyml0Tn1AGu_e5juT2NDU5bDOgnB5HsGkclI0vZ0-r5g3rc0G05g2W8Iix_RbZx20Tj3McJODczHVZkOGSszerRcARjos6Mchm3SHdX-m-qNIGfJlOIVXsTgorQ7z0w_pqniG3lFaQ3lvy3oXdUBFH3DTILh2S4vmkuM";
+        final ProgressDialog pd = new ProgressDialog(this);
+        pd.setMessage("Uploading");
+        pd.show();
 
         if (mImageUri != null) {
             String path = mImageUri.toString();
-            Log.d("path", "onResponse: Code: " + path);
+//            Log.d("path", "onResponse: Code: " + path);
             File file = new File(new URI(path));
             RequestBody reqBody = RequestBody.create(MediaType.parse("multipart/form-file"),file);
             MultipartBody.Part partImage = MultipartBody.Part.createFormData("image", file.getName(),reqBody);
@@ -236,7 +267,7 @@ public class ProfileActivity extends AppCompatActivity {
                 public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
 
                     if (!response.isSuccessful()) {
-                        Log.d("NOT SUCCESS", "onResponse: Code: " + response.code());
+                        Log.d("NOT SUCCESS", "onResponse: Code: " + response.toString());
 
                         return;
                     }
@@ -248,7 +279,9 @@ public class ProfileActivity extends AppCompatActivity {
 
                         if (jsonObject != null) {
                             image_url = jsonObject.getString("url");
-                            Toast.makeText(ProfileActivity.this,"Image upload successfull"+image_url,Toast.LENGTH_SHORT).show();
+                            Glide.with(context).load(image_url).into(imageview);
+                            pd.dismiss();
+                          Toast.makeText(ProfileActivity.this,"Image upload successfull",Toast.LENGTH_SHORT).show();
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -259,6 +292,9 @@ public class ProfileActivity extends AppCompatActivity {
                 @Override
                 public void onFailure(Call<JsonObject> call, Throwable t) {
                     Log.d("TAG", "CheckResponse: onFailure: " + t.getLocalizedMessage());
+                    Toast.makeText(ProfileActivity.this,"image not uploaded please try again"+image_url,Toast.LENGTH_SHORT).show();
+                    pd.dismiss();
+
                 }
             });
         }

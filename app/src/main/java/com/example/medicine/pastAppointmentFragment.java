@@ -11,15 +11,16 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
-import com.example.trucklagbe.R;
 import com.example.medicine.dummy.DummyContent;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A fragment representing a list of Items.
  */
 public class pastAppointmentFragment extends Fragment {
-
+    private List<PastAppointmentDatatype> list = new ArrayList<>();
     // TODO: Customize parameter argument names
     private static final String ARG_COLUMN_COUNT = "column-count";
     // TODO: Customize parameters
@@ -56,6 +57,10 @@ public class pastAppointmentFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_past_appointment_list, container, false);
 
+        list.add(new PastAppointmentDatatype("1","patient_name","doctor_name","Doctor_location","Doctor designamtion","5-5-2020"));
+        list.add(new PastAppointmentDatatype("2","patient_name1","doctor_name1","Doctor_location1","Doctor designamtion1","5-5-2020"));
+        list.add(new PastAppointmentDatatype("2","patient_name2","doctor_name2","Doctor_location2","Doctor designamtion2","5-5-2020"));
+
         // Set the adapter
         if (view instanceof RecyclerView) {
             Context context = view.getContext();
@@ -65,7 +70,7 @@ public class pastAppointmentFragment extends Fragment {
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-            recyclerView.setAdapter(new MyItemRecyclerViewAdapter(DummyContent.ITEMS));
+            recyclerView.setAdapter(new MyItemRecyclerViewAdapter(list));
         }
         return view;
     }

@@ -13,7 +13,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".BookSerialActivity"></activity>
+        <activity android:name=".HistoryActivity"></activity>
+        <activity android:name=".BookSerialActivity" />
         <activity android:name=".DoctorDetailsActivity" />
         <activity android:name=".ProfileActivity" />
         <activity android:name=".SpecificCategory" />

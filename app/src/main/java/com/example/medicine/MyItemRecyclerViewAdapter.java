@@ -17,9 +17,9 @@ import java.util.List;
  */
 public class MyItemRecyclerViewAdapter extends RecyclerView.Adapter<MyItemRecyclerViewAdapter.ViewHolder> {
 
-    private final List<DummyItem> mValues;
+    private final List<PastAppointmentDatatype> mValues;
 
-    public MyItemRecyclerViewAdapter(List<DummyItem> items) {
+    public MyItemRecyclerViewAdapter(List<PastAppointmentDatatype> items) {
         mValues = items;
     }
 
@@ -33,8 +33,11 @@ public class MyItemRecyclerViewAdapter extends RecyclerView.Adapter<MyItemRecycl
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mItem = mValues.get(position);
-        holder.mIdView.setText(mValues.get(position).id);
-        holder.mContentView.setText(mValues.get(position).content);
+        holder.pname.setText(mValues.get(position).getPatient_name());
+        holder.dname.setText(mValues.get(position).getDoctor_name());
+        holder.ddasignation.setText(mValues.get(position).getDoctor_designation());
+        holder.dlocation.setText(mValues.get(position).getDoctor_location());
+        holder.date.setText(mValues.get(position).getAppointment_date());
     }
 
     @Override
@@ -44,20 +47,26 @@ public class MyItemRecyclerViewAdapter extends RecyclerView.Adapter<MyItemRecycl
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         public final View mView;
-        public final TextView mIdView;
-        public final TextView mContentView;
-        public DummyItem mItem;
+        public final TextView pname;
+        public final TextView dname;
+        public final TextView ddasignation;
+        public final TextView dlocation;
+        public final TextView date;
+        public PastAppointmentDatatype mItem;
 
         public ViewHolder(View view) {
             super(view);
             mView = view;
-            mIdView = (TextView) view.findViewById(R.id.item_number);
-            mContentView = (TextView) view.findViewById(R.id.content);
+            pname = (TextView) view.findViewById(R.id.patient_name_past);
+            dname = (TextView) view.findViewById(R.id.doctor_name_past);
+            ddasignation = (TextView) view.findViewById(R.id.doctor_designamtion_past);
+            dlocation = (TextView) view.findViewById(R.id.doctor_location_past);
+            date = (TextView) view.findViewById(R.id.appont_date);
         }
 
-        @Override
-        public String toString() {
-            return super.toString() + " '" + mContentView.getText() + "'";
-        }
+//        @Override
+//        public String toString() {
+//            return super.toString() + " '" + mContentView.getText() + "'";
+//        }
     }
 }

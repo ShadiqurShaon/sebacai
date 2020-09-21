@@ -7,9 +7,9 @@ public class ApiEnv {
     private String livedoctor;
     private String localdoctor;
     public ApiEnv() {
-        this.live = "http://patient.kgsebatech.com/api/";
+        this.live = "https://kgsebatech.com/api/";
         this.local = "http://192.168.0.108:8000/api/";
-        this.livedoctor = "http://doctor.kgsebatech.com/api/";
+        this.livedoctor = "https://doctor.kgsebatech.com/api/";
         this.localdoctor = "http://192.168.0.108:9000/api/";
 
     }
@@ -19,7 +19,8 @@ public class ApiEnv {
     }
 
     public String getLocaldoctor() {
-        return localdoctor;
+        return livedoctor;
+
     }
 
 
@@ -33,6 +34,6 @@ public class ApiEnv {
 
     public String base_url()
     {
-        return getLocal();
+        return getLive();
     }
 }

@@ -69,7 +69,7 @@
                 android:layout_marginLeft="32dp"
                 android:layout_marginRight="32dp"
                 android:hint="নাম"
-                android:maxLength="5"
+                android:maxLength="50"
                 android:textAlignment="center"
                 android:inputType="text"
                 android:layout_marginTop="20dp"/>

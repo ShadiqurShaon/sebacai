@@ -111,14 +111,13 @@ public class Varification extends AppCompatActivity {
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
                 if (!response.isSuccessful()) {
                     Log.d("TAG", "onResponse: Code: " + response.code());
-                    Log.d("TAG", "onResponse: Code: " + response.message());
 
                     return;
                 }
-                Log.d("ok", "onResponse: Code: " + response.message());
+                Log.d("verification", "onResponse: Code: " + response.message());
                 try {
                     JSONObject jsonObject = new JSONObject(response.body().toString());
-                    Log.d("ok", "onResponse: Code: " +jsonObject.toString());
+                    Log.d("Token", "onResponse: Code: " +jsonObject.toString());
                     if (jsonObject != null) {
                         String token2 = "Bearer " + jsonObject.getString("token");
                         progressDialog.dismiss();

@@ -1,20 +1,29 @@
 package com.example.medicine;
 
+import android.content.Context;
 import android.os.Bundle;
+
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import com.example.trucklagbe.R;
+
+import java.util.ArrayList;
+import java.util.List;
+
 
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link UpcommingAppointmentFragment#newInstance} factory method to
  * create an instance of this fragment.
- *
  */
 public class UpcommingAppointmentFragment extends Fragment {
-
+    private List<PastAppointmentDatatype> list = new ArrayList<>();
+    private int mColumnCount = 1;
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -23,6 +32,10 @@ public class UpcommingAppointmentFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+
+    public UpcommingAppointmentFragment() {
+        // Required empty public constructor
+    }
 
     /**
      * Use this factory method to create a new instance of
@@ -42,10 +55,6 @@ public class UpcommingAppointmentFragment extends Fragment {
         return fragment;
     }
 
-    public UpcommingAppointmentFragment() {
-        // Required empty public constructor
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,10 +64,33 @@ public class UpcommingAppointmentFragment extends Fragment {
         }
     }
 
+//    @Override
+//    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+//                             Bundle savedInstanceState) {
+//        // Inflate the layout for this fragment
+//        return inflater.inflate(R.layout.fragment_upcomming_appointment, container, false);
+//    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_upcomming_appointment, container, false);
+        View view = inflater.inflate(R.layout.fragment_upcomming_appointment, container, false);
+
+        list.add(new PastAppointmentDatatype("1","patient_name","doctor_name","Doctor_location","Doctor designamtion","5-5-2020"));
+        list.add(new PastAppointmentDatatype("2","patient_name1","doctor_name1","Doctor_location1","Doctor designamtion1","5-5-2020"));
+        list.add(new PastAppointmentDatatype("2","patient_name2","doctor_name2","Doctor_location2","Doctor designamtion2","5-5-2020"));
+
+        // Set the adapter
+//        if (view instanceof RecyclerView) {
+            Context context = view.getContext();
+            RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.upcomming_appoitment_recycle);
+            if (mColumnCount <= 1) {
+                recyclerView.setLayoutManager(new LinearLayoutManager(context));
+            } else {
+                recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
+            }
+            recyclerView.setAdapter(new MyItemRecyclerViewAdapter(list));
+//        }
+        return view;
     }
 }

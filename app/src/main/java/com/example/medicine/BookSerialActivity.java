@@ -117,7 +117,7 @@ public class BookSerialActivity extends AppCompatActivity implements AdapterView
 
 
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(new ApiEnv().getLocal())
+                .baseUrl(new ApiEnv().base_url())
                 //.addConverterFactory(ScalarsConverterFactory.create())
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .build();
@@ -138,7 +138,6 @@ public class BookSerialActivity extends AppCompatActivity implements AdapterView
                     if (jsonObject != null) {
                         progressDialog.dismiss();
                         shoeDailog();
-
                         Log.d("jsonobject", "onResponse: Code: "+jsonObject);
                     }
                 } catch (JSONException e) {
@@ -148,7 +147,8 @@ public class BookSerialActivity extends AppCompatActivity implements AdapterView
 
             @Override
             public void onFailure(Call<JsonObject> call, Throwable t) {
-
+                progressDialog.dismiss();
+                Log.d("TAG", "CheckResponse: onFailure: " + t.getLocalizedMessage());
             }
         });
 
